@@ -10,7 +10,7 @@ use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\StubRegistrar;
 use Orchestra\Workbench\Workbench;
 
-use function Orchestra\Sidekick\join_paths;
+use function Illuminate\Filesystem\join_paths;
 
 class InstalledWorkbench
 {
@@ -24,8 +24,10 @@ class InstalledWorkbench
 
     /**
      * Handle the event.
+     *
+     * @return void
      */
-    public function handle(InstallEnded $event): void
+    public function handle(InstallEnded $event)
     {
         $force = false;
 

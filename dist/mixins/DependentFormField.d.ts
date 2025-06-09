@@ -58,12 +58,6 @@ declare namespace _default {
          */
         function currentlyIsReadonly(): boolean;
         /**
-         * Determine if the field is in immutable state.
-         *
-         * @return {boolean}
-         */
-        function currentlyIsImmutable(): boolean;
-        /**
          * @returns {string[]}
          */
         function dependsOn(): string[];

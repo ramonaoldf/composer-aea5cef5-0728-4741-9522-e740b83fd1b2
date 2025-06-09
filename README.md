@@ -21,7 +21,7 @@ npm install --save-dev "vendor/laravel/nova-devtool"
 Laravel Nova Devtool can setup a basic Laravel Nova installation using `workbench` directory via [Orchestra Workbench](https://github.com/orchestral/workbench). To start the installation you can run the following command:
 
 ```shell
-php vendor/bin/testbench nova:devtool setup
+php vendor/bin/testbench workbench:install --devtool
 ```
 
 Once the installation is completed, you should be able to serve Laravel Nova by running the following command:
@@ -65,7 +65,7 @@ To reverse the above action, you need to run the following command:
 php vendor/bin/testbench nova:devtool disable-vue-devtool
 ```
 
-## Upgrading from Nova 4
+## Ugrading from Nova 4
 
 Nova Devtool ships with a generic `nova.mix.js` instead of publishing the file on each 3rd-party components. For external 3rd-party component you just need to include change the following code in `webpack.mix.js`:
 

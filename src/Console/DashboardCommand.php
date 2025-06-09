@@ -21,8 +21,6 @@ class DashboardCommand extends Command
     protected function configure()
     {
         $this->addGeneratorPresetOptions();
-
-        parent::configure();
     }
 
     /** {@inheritDoc} */

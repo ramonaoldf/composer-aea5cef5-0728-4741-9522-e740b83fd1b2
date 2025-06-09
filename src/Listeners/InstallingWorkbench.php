@@ -18,8 +18,10 @@ class InstallingWorkbench
 
     /**
      * Handle the event.
+     *
+     * @return void
      */
-    public function handle(InstallStarted $event): void
+    public function handle(InstallStarted $event)
     {
         if ($event->isBasicInstallation()) {
             throw new RuntimeException('Nova Devtool does not support installation with --basic` option');
