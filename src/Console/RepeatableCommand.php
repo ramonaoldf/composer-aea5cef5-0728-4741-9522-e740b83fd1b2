@@ -2,16 +2,16 @@
 
 namespace Laravel\Nova\DevTool\Console;
 
-use Laravel\Nova\Console\BaseResourceCommand as Command;
+use Laravel\Nova\Console\RepeatableCommand as Command;
 use Orchestra\Canvas\Core\Concerns\CodeGenerator;
 use Orchestra\Canvas\Core\Concerns\UsesGeneratorOverrides;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 /**
- * @see \Laravel\Nova\Console\BaseResourceCommand
+ * @see Laravel\Nova\Console\RepeatableCommand
  */
-#[AsCommand(name: 'nova:base-resource', description: 'Create a new base resource class')]
-class BaseResourceCommand extends Command
+#[AsCommand(name: 'nova:repeatable', description: 'Create a new repeatable class')]
+class RepeatableCommand extends Command
 {
     use CodeGenerator;
     use UsesGeneratorOverrides;
@@ -44,5 +44,12 @@ class BaseResourceCommand extends Command
     protected function rootNamespace()
     {
         return $this->rootNamespaceUsingCanvas();
+    }
+
+    /** {@inheritDoc} */
+    #[\Override]
+    protected function getModelNamespace()
+    {
+        return $this->generatorPreset()->modelNamespace();
     }
 }
