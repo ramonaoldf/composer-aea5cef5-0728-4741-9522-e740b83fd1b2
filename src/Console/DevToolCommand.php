@@ -46,7 +46,7 @@ class DevToolCommand extends Command implements PromptsForMissingInput
             'install' => $this->installNpmDependencies($filesystem, $manifest),
             'enable-vue-devtool' => $this->enablesVueDevTool($filesystem, $manifest),
             'disable-vue-devtool' => $this->disablesVueDevTool($filesystem, $manifest),
-            'tsconfig' => $this->installTypeScriptConfiguration($filesystem, $manifest),
+            'tsconfig' => $this->installTypeScriptConfiguration($filesystem, $manifest, confirmation: false),
             default => throw new InvalidArgumentException(sprintf('Unable to handle [%s] action', $action)),
         };
     }
@@ -56,10 +56,7 @@ class DevToolCommand extends Command implements PromptsForMissingInput
      */
     protected function installNovaWorkbench(Filesystem $filesystem, PackageManifest $manifest): int
     {
-        $this->executeCommand([
-            'npm set progress=false',
-            'npm install --save-dev "vendor/laravel/nova-devtool"',
-        ], package_path());
+        $this->installNoveDevtoolNpmDependencies();
 
         return $this->call('workbench:install', [
             '--devtool' => true,
@@ -67,15 +64,26 @@ class DevToolCommand extends Command implements PromptsForMissingInput
     }
 
     /**
+     * Install `laravel-nova-devtool` to `package.json`.
+     */
+    protected function installNoveDevtoolNpmDependencies(): void
+    {
+        $this->executeCommand([
+            'npm set progress=false',
+            'npm install --save-dev "vendor/laravel/nova-devtool"',
+        ], package_path());
+    }
+
+    /**
      * Install `tsconfig.json` configuration.
      */
-    protected function installTypeScriptConfiguration(Filesystem $filesystem, PackageManifest $manifest): int
+    protected function installTypeScriptConfiguration(Filesystem $filesystem, PackageManifest $manifest, bool $confirmation = true): int
     {
         (new GeneratesFile(
             filesystem: $filesystem,
             components: $this->components,
             force: false,
-            confirmation: true,
+            confirmation: $confirmation,
         ))->handle(
             join_paths(__DIR__, 'stubs', 'tsconfig.json'),
             package_path('tsconfig.json')
@@ -116,9 +124,11 @@ class DevToolCommand extends Command implements PromptsForMissingInput
             return self::SUCCESS;
         }
 
+        $this->installNoveDevtoolNpmDependencies();
+
         $this->executeCommand([
             'npm set progress=false',
-            'npm install --dev '.implode(' ', $dependencies),
+            'npm install --save-dev '.implode(' ', $dependencies),
         ], package_path());
 
         if (in_array('tailwindcss', $dependencies)) {
@@ -131,7 +141,7 @@ class DevToolCommand extends Command implements PromptsForMissingInput
             ], package_path('tailwind.config.js'));
         }
 
-        return $this->installTypeScriptConfiguration($filesystem, $manifest);
+        return $this->installTypeScriptConfiguration($filesystem, $manifest, confirmation: true);
     }
 
     /**
@@ -206,7 +216,7 @@ class DevToolCommand extends Command implements PromptsForMissingInput
                     'install' => 'Install NPM Dependencies',
                     'enable-vue-devtool' => 'Enable Vue DevTool',
                     'disable-vue-devtool' => 'Disable Vue DevTool',
-                    'tsconfig' => 'Install `tsconfig.json` for Nova',
+                    'tsconfig' => is_file(package_path('tsconfig.json')) ? null : 'Install `tsconfig.json` for Nova',
                 ]),
                 default: 'owner'
             ),
