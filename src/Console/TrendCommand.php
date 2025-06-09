@@ -2,16 +2,16 @@
 
 namespace Laravel\Nova\DevTool\Console;
 
-use Laravel\Nova\Console\BaseResourceCommand as Command;
+use Laravel\Nova\Console\TrendCommand as Command;
 use Orchestra\Canvas\Core\Concerns\CodeGenerator;
 use Orchestra\Canvas\Core\Concerns\UsesGeneratorOverrides;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 /**
- * @see \Laravel\Nova\Console\BaseResourceCommand
+ * @see Laravel\Nova\Console\TrendCommand
  */
-#[AsCommand(name: 'nova:base-resource', description: 'Create a new base resource class')]
-class BaseResourceCommand extends Command
+#[AsCommand(name: 'nova:trend', description: 'Create a new metric (trend) class')]
+class TrendCommand extends Command
 {
     use CodeGenerator;
     use UsesGeneratorOverrides;

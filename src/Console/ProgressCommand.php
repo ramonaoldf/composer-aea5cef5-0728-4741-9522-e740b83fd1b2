@@ -2,16 +2,16 @@
 
 namespace Laravel\Nova\DevTool\Console;
 
-use Laravel\Nova\Console\BaseResourceCommand as Command;
+use Laravel\Nova\Console\ProgressCommand as Command;
 use Orchestra\Canvas\Core\Concerns\CodeGenerator;
 use Orchestra\Canvas\Core\Concerns\UsesGeneratorOverrides;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 /**
- * @see \Laravel\Nova\Console\BaseResourceCommand
+ * @see Laravel\Nova\Console\ProgressCommand
  */
-#[AsCommand(name: 'nova:base-resource', description: 'Create a new base resource class')]
-class BaseResourceCommand extends Command
+#[AsCommand(name: 'nova:progress', description: 'Create a new metric (progress) class')]
+class ProgressCommand extends Command
 {
     use CodeGenerator;
     use UsesGeneratorOverrides;

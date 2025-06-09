@@ -8,6 +8,7 @@
  * @typedef {Object<string, any>} AppConfig
  * @typedef {import('./util/FormValidation').Form} Form
  * @typedef {(app: VueApp, store: VueStore) => void} BootingCallback
+ * @typedef {(app: VueApp, store: VueStore) => void} BootedCallback
  */
 export default class Nova {
     /**
@@ -19,6 +20,11 @@ export default class Nova {
      * @type {Array<BootingCallback>}
      */
     protected bootingCallbacks: Array<BootingCallback>;
+    /**
+     * @protected
+     * @type {Array<BootedCallback>}
+     */
+    protected bootedCallbacks: Array<BootedCallback>;
     /** @readonly */
     readonly appConfig: {
         [x: string]: any;
@@ -38,10 +44,7 @@ export default class Nova {
     /** @protected */
     protected $toasted: any;
     /** @public */
-    public $progress: {
-        start: (force: any) => void;
-        done: () => void;
-    };
+    public $progress: any;
     /** @public */
     public $router: import("@inertiajs/core").Router;
     /** @readonly */
@@ -53,27 +56,28 @@ export default class Nova {
     /** @private */
     private __booted;
     /** @private */
-    private __deployed;
+    private __liftOff;
     /**
-     * Register a callback to be called before Nova starts. This is used to bootstrap
+     * Register booting callback to be called before Nova starts. This is used to bootstrap
      * addons, tools, custom fields, or anything else Nova needs
      *
      * @param {BootingCallback} callback
      */
     booting(callback: BootingCallback): void;
     /**
-     * Execute all of the booting callbacks.
+     * Register booted callback to be called before Nova starts. This is used to bootstrap
+     * addons, tools, custom fields, or anything else Nova needs
      *
-     * @ignore
+     * @param {BootedCallback} callback
+     */
+    booted(callback: BootedCallback): void;
+    /**
+     * Execute all of the booting callbacks.
      */
     boot(): void;
     /** @type {VueStore} */
     store: VueStore;
-    /**
-     * @param {BootingCallback} callback
-     */
-    booted(callback: BootingCallback): void;
-    countdown(): Promise<void>;
+    countdown(): void;
     /** @protected */
     protected mountTo: Element;
     /**
@@ -88,10 +92,6 @@ export default class Nova {
     liftOff(): void;
     /** @private */
     private notificationPollingInterval;
-    /**
-     * @ignore
-     */
-    deploy(): void;
     /**
      * Return configuration value from a key.
      *
@@ -283,3 +283,4 @@ export type AppConfig = {
 };
 export type Form = import("./util/FormValidation").Form;
 export type BootingCallback = (app: VueApp, store: VueStore) => void;
+export type BootedCallback = (app: VueApp, store: VueStore) => void;

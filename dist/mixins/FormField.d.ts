@@ -1,7 +1,7 @@
 declare namespace _default {
     export { FormEvents as extends };
     export let props: {
-        [x: string]: any;
+        [key: string]: any;
     };
     export let emits: string[];
     export function data(): {
@@ -25,6 +25,14 @@ declare namespace _default {
          * @param {FormData} formData
          */
         function fill(formData: FormData): void;
+        /**
+         * Provide a function to fills FormData when field.
+         *
+         * @param {FormData} formData
+         * @param {string} attribute
+         * @param {any} value
+         */
+        function fillInto(formData: FormData, attribute: string, value: any): void;
         /**
          * Provide a function to fills FormData when field is visible.
          *
@@ -79,6 +87,12 @@ declare namespace _default {
          * @returns {boolean}
          */
         function isReadonly(): boolean;
+        /**
+         * Determine if the field is in immutable state.
+         *
+         * @return {boolean}
+         */
+        function isImmutable(): boolean;
         /**
          * Determine if the field is accessed from Action.
          *
