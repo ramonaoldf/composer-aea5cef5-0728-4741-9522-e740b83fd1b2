@@ -9,78 +9,61 @@ use Laravel\Nova\Console\BaseResourceCommand;
 use Laravel\Nova\Console\DashboardCommand;
 use Laravel\Nova\Console\FilterCommand;
 use Laravel\Nova\Console\LensCommand;
-use Laravel\Nova\Console\PartitionCommand;
 use Laravel\Nova\Console\PolicyMakeCommand;
-use Laravel\Nova\Console\ProgressCommand;
-use Laravel\Nova\Console\RepeatableCommand;
 use Laravel\Nova\Console\ResourceCommand;
-use Laravel\Nova\Console\TableCommand;
-use Laravel\Nova\Console\TrendCommand;
-use Laravel\Nova\Console\ValueCommand;
 use Orchestra\Workbench\Events\InstallEnded;
 use Orchestra\Workbench\Events\InstallStarted;
 use Orchestra\Workbench\Workbench;
 
-use function Orchestra\Sidekick\join_paths;
+use function Illuminate\Filesystem\join_paths;
 
 class DevToolServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
+     *
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
         if (! $this->app->runningInConsole()) {
             return;
         }
 
         $this->commands([
-            Console\DisableVueDevToolCommand::class,
-            Console\EnableVueDevToolCommand::class,
+            Console\DevToolCommand::class,
         ]);
 
         if (defined('TESTBENCH_WORKING_PATH')) {
-            Workbench::stub()
-                ->swap('config', join_paths(__DIR__, '..', 'stubs', 'testbench.stub'))
-                ->swap('seeders.database', join_paths(__DIR__, '..', 'stubs', 'DatabaseSeeder.stub'));
+            Workbench::swapFile('config', join_paths(__DIR__, '..', 'stubs', 'testbench.stub'));
+            Workbench::swapFile('seeders.database', join_paths(__DIR__, '..', 'stubs', 'DatabaseSeeder.stub'));
 
             $this->registerActionCommand();
             $this->registerBaseResourceCommand();
             $this->registerDashboardCommand();
             $this->registerFilterCommand();
             $this->registerLensCommand();
-            $this->registerPartitionCommand();
             $this->registerPolicyMakeCommand();
-            $this->registerProgressCommand();
-            $this->registerRepeatableCommand();
             $this->registerResourceCommand();
-            $this->registerTableCommand();
-            $this->registerTrendCommand();
-            $this->registerValueCommand();
 
             $this->commands([
                 Console\ActionCommand::class,
                 Console\BaseResourceCommand::class,
                 Console\DashboardCommand::class,
-                Console\DevToolCommand::class,
                 Console\FilterCommand::class,
                 Console\LensCommand::class,
-                Console\PartitionCommand::class,
                 Console\PolicyMakeCommand::class,
-                Console\ProgressCommand::class,
-                Console\RepeatableCommand::class,
                 Console\ResourceCommand::class,
-                Console\TableCommand::class,
-                Console\TrendCommand::class,
-                Console\ValueCommand::class,
             ]);
         }
     }
 
     /**
      * Register the `nova:action` command.
+     *
+     * @return void
      */
-    protected function registerActionCommand(): void
+    protected function registerActionCommand()
     {
         $this->app->singleton(ActionCommand::class, function ($app) {
             return new Console\ActionCommand($app['files']);
@@ -89,8 +72,10 @@ class DevToolServiceProvider extends ServiceProvider
 
     /**
      * Register the `nova:dashboard` command.
+     *
+     * @return void
      */
-    protected function registerDashboardCommand(): void
+    protected function registerDashboardCommand()
     {
         $this->app->singleton(DashboardCommand::class, function ($app) {
             return new Console\DashboardCommand($app['files']);
@@ -99,8 +84,10 @@ class DevToolServiceProvider extends ServiceProvider
 
     /**
      * Register the `nova:base-resource` command.
+     *
+     * @return void
      */
-    protected function registerBaseResourceCommand(): void
+    protected function registerBaseResourceCommand()
     {
         $this->app->singleton(BaseResourceCommand::class, function ($app) {
             return new Console\BaseResourceCommand($app['files']);
@@ -109,8 +96,10 @@ class DevToolServiceProvider extends ServiceProvider
 
     /**
      * Register the `nova:filter` command.
+     *
+     * @return void
      */
-    protected function registerFilterCommand(): void
+    protected function registerFilterCommand()
     {
         $this->app->singleton(FilterCommand::class, function ($app) {
             return new Console\FilterCommand($app['files']);
@@ -119,8 +108,10 @@ class DevToolServiceProvider extends ServiceProvider
 
     /**
      * Register the `nova:lens` command.
+     *
+     * @return void
      */
-    protected function registerLensCommand(): void
+    protected function registerLensCommand()
     {
         $this->app->singleton(LensCommand::class, function ($app) {
             return new Console\LensCommand($app['files']);
@@ -128,19 +119,11 @@ class DevToolServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the `nova:partition` command.
-     */
-    protected function registerPartitionCommand(): void
-    {
-        $this->app->singleton(PartitionCommand::class, function ($app) {
-            return new Console\PartitionCommand($app['files']);
-        });
-    }
-
-    /**
      * Register the `nova:policy` command.
+     *
+     * @return void
      */
-    protected function registerPolicyMakeCommand(): void
+    protected function registerPolicyMakeCommand()
     {
         $this->app->singleton(PolicyMakeCommand::class, function ($app) {
             return new Console\PolicyMakeCommand($app['files']);
@@ -148,29 +131,11 @@ class DevToolServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the `nova:progress` command.
-     */
-    protected function registerProgressCommand(): void
-    {
-        $this->app->singleton(ProgressCommand::class, function ($app) {
-            return new Console\ProgressCommand($app['files']);
-        });
-    }
-
-    /**
-     * Register the `nova:repeatable` command.
-     */
-    protected function registerRepeatableCommand(): void
-    {
-        $this->app->singleton(RepeatableCommand::class, function ($app) {
-            return new Console\RepeatableCommand($app['files']);
-        });
-    }
-
-    /**
      * Register the `nova:resource` command.
+     *
+     * @return void
      */
-    protected function registerResourceCommand(): void
+    protected function registerResourceCommand()
     {
         $this->app->singleton(ResourceCommand::class, function ($app) {
             return new Console\ResourceCommand($app['files']);
@@ -178,39 +143,11 @@ class DevToolServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register the `nova:table` command.
-     */
-    protected function registerTableCommand(): void
-    {
-        $this->app->singleton(TableCommand::class, function ($app) {
-            return new Console\TableCommand($app['files']);
-        });
-    }
-
-    /**
-     * Register the `nova:trend` command.
-     */
-    protected function registerTrendCommand(): void
-    {
-        $this->app->singleton(TrendCommand::class, function ($app) {
-            return new Console\TrendCommand($app['files']);
-        });
-    }
-
-    /**
-     * Register the `nova:value` command.
-     */
-    protected function registerValueCommand(): void
-    {
-        $this->app->singleton(ValueCommand::class, function ($app) {
-            return new Console\ValueCommand($app['files']);
-        });
-    }
-
-    /**
      * Bootstrap services.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
         if ($this->app->runningInConsole() && defined('TESTBENCH_CORE')) {
             tap($this->app->make('events'), function (EventDispatcher $event) {

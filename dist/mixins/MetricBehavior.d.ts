@@ -29,11 +29,7 @@ declare namespace _default {
             export { _default_2 as default };
         }
     }
-    function data(): {
-        metricUniqueId: string;
-    };
     function created(): void;
-    function mounted(): void;
     function beforeUnmount(): void;
     namespace methods {
         function fetch(): void;
